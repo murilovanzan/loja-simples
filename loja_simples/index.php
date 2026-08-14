@@ -43,5 +43,10 @@
     <a href="marca/">
         Cadastrar marcas
     </a>
+    <br>
+    <a href="/phpmyadmin" target="_blank">
+        PHPMYADMIN
+    </a>
+    
 </body>
 </html>
