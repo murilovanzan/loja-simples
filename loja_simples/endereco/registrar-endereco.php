@@ -6,7 +6,7 @@
 
     if(isset($_POST['nome']) && isset($_POST['CEP'])){
 
-    extract($_POST);
+        extract($_POST);
 
         try{
 
@@ -21,13 +21,16 @@
                 ]
             );
 
-            header('location: index.php');
         }
         catch(PDOException $e){
             echo 'Erro ao registrar um endereço - ' . $e->getMessage();
         }
+    
+        header('location: index.php');
 
-
+    }
+    else{
+        header('location: index.php');
     }
 
 

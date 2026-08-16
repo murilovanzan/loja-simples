@@ -23,6 +23,12 @@
     }
 
     if(isset($_GET['id'])){
+
+        extract($_GET); 
+        
+        $acao = "alterar-endereco.php?id=".$id;
+        $nomeBotao = "Alterar endereço";
+
         try{
 
             $sql = 'SELECT * FROM endereco WHERE ID_user = :ID_user AND id = :id';
@@ -43,19 +49,21 @@
         }
     }
     else{
+        $acao = "registrar-endereco.php";
+        $nomeBotao = "Registrar endereço";
         $addrss = ["nome" => '', "CEP" => ''];
     }
 
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastrar enderecos</title>
 </head>
 <body>
-    <form action="registrar-endereco.php" method="post">
+    <form action="<?= $acao ?>" method="post">
 
         <label for="nome">Nome:</label>
         <input type="text" name="nome" id="nome" value="<?= $addrss['nome']?>">
@@ -63,7 +71,7 @@
         <label for="CEP">CEP:</label>
         <input type="text" name="CEP" id="CEP" value="<?= $addrss['CEP']?>">
 
-        <button type="submit">Registrar endereco</button>
+        <button type="submit"><?= $nomeBotao ?></button>
 
     </form>
 
