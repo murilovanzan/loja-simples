@@ -1,6 +1,6 @@
 <?php
 
-    require_once 'conexao.php';
+    require_once '../config/conexao.php';
 
     session_start();
 
@@ -24,13 +24,14 @@
 
             if($username == $user['username'] && password_verify($senha, $user['senha'])){
                 $_SESSION['logado'] = true;
-                header('location: logado.php');
+                $_SESSION['ID_login'] = $user['ID'];
+                header('location: ../logado.php');
                 exit;
             }
             else{
                 $_SESSION['logado'] = false;
                 $_SESSION['erroLogin'] = "O username ou senha estão errados!";
-                header('location: index.php');
+                header('location: ../');
             }
 
         }

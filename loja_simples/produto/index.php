@@ -1,7 +1,10 @@
 <?php
 
-    require_once '../conexao.php';
+    require_once '../config/conexao.php';
 
+    include_once '../assets/function.php';
+
+    session_start();
     try{
 
         $sql = "SELECT * FROM marca;";
@@ -12,27 +15,32 @@
 
     }
     catch(PDOException $e){
-        echo 'Erro na busca ao cadastrar marca - ' . $e->getMessage();
+        echo 'Erro na busca das marcas para registrar produto - ' . $e->getMessage();
     }
 
-    try{
-
-        $sql = "SELECT * FROM produto;";
-        $stmt = $pdo->prepare($sql);
-
-        $stmt->execute();
-        $produtos = $stmt->fetchAll();
-
+    if(!isAdmin($pdo)){
+        header('location: ../logado.php');
     }
-    catch(PDOException $e){
-        echo 'Erro na busca ao cadastrar marca - ' . $e->getMessage();
-    }
+    else{
+        try{
 
+            $sql = "SELECT * FROM produto;";
+            $stmt = $pdo->prepare($sql);
+
+            $stmt->execute();
+            $produtos = $stmt->fetchAll();
+
+        }
+        catch(PDOException $e){
+            echo 'Erro na busca dos produtos - ' . $e->getMessage();
+        }
+    }
+    
     if(isset($_GET['id'])){
 
         extract($_GET);
         
-        $acao = 'alterar-produto.php';
+        $acao = "alterar-produto.php?id=".$id;
         $nomeBotao = 'Atualizar produto';
 
         $sql = "SELECT * FROM produto WHERE id = :id";
@@ -41,13 +49,13 @@
         $stmt->execute([":id" => $id]);
 
         $prod = $stmt->fetch();
-
+        
     }
     else{
         
         $acao = 'cadastro-produto.php';
         $nomeBotao = 'Cadastrar produto';
-        $prod = ['nome' => '', 'descricao' => '', 'preco' => '', ];
+        $prod = ['nome' => '', 'descricao' => '', 'preco_unitario' => ''];
     }
 
 ?>
@@ -64,10 +72,10 @@
         <input type="text" name="nome" id="nome" value=<?= $prod['nome']?>>
 
         <label for="descricao">Descricao:</label>
-        <textarea name="descricao" id="descricao" value=<?= $prod['nome']?>></textarea>
+        <textarea name="descricao" id="descricao" ><?= $prod['descricao']?></textarea>
 
         <label for="preco">Preço:</label>
-        <input type="number" name="preco" id="preco" step="0.01" value=<?= $prod['nome']?>>
+        <input type="number" name="preco" id="preco" step="0.01" value=<?= $prod['preco_unitario']?>>
 
         <label for="marca">Marca:</label>
         <select name="marca" id="marca" required>

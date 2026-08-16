@@ -1,55 +1,44 @@
 <?php
 
-    require_once 'verifica-login.php';
+    require_once 'assets/verifica-login.php';
 
-    require_once 'conexao.php';
+    require_once 'config/conexao.php';
 
-    echo "<h1>LOGADO</h1>";
+    include_once 'assets/function.php';
 
-    echo "<a href='logout.php'>logout</a>";
-
-    try{
-
-        $sql = "SELECT * FROM user;";
-        $stmt = $pdo->prepare($sql);
-
-        $stmt->execute();
-        $users = $stmt->fetchAll();
+    if(isAdmin($pdo)){
+        $tableDisplay = "block";
     }
-    catch(PDOException $e){
-        echo "Erro na busca ao cadastrar usuário - " . $e->getMessage();
+    else{
+        $tableDisplay = "none";
     }
 
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Logado</title>
 </head>
 <body>
-
-    <table border=1>
-        <thead>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Delete</th>
-        </thead>
-        <tbody>
-    <?php
-        foreach ($users as $user) :
-    ?>
-            <tr>
-                <td><?= $user['ID'] ?></td>
-                <td><?= $user['username'] ?></td>
-                <td><a href="usuario/delete-user.php?id=<?= $user['ID'] ?>">[X]</a></td>
-            </tr>
-    <?php      
-        endforeach;
-    ?>
-        </tbody>
-    </table>
+    <div style="display: <?= $tableDisplay ?>;">
+        <a href="produto/">
+            Cadastrar produtos
+        </a>
+        <br>
+        <a href="marca/">
+            Cadastrar marcas
+        </a>
+        <br>
+        <a href="usuario/">
+            Cadastrar usuário
+        </a>
+    </div>
+    
+    <a href='registro/logout.php'>
+        logout
+    </a>
 </body>
 </html>
     

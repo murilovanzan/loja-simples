@@ -1,6 +1,6 @@
 <?php
 
-    require_once '../conexao.php';
+    require_once '../config/conexao.php';
 
     session_start();
 
@@ -8,17 +8,17 @@
 
     try{
 
-        $sql = "DELETE FROM user WHERE id = :id;";
+        $sql = "DELETE FROM marca WHERE id = :id;";
         $stmt = $pdo->prepare($sql);
 
         $stmt->execute([
             ':id' => $id
         ]);
 
-        header('location: ../logado.php');
+        header('location: index.php');
     }
     catch(PDOException $e){
-        echo "Erro na busca ao cadastrar usuário - " . $e->getMessage();
+        echo "Erro ao deletar marca - " . $e->getMessage();
     }
 
 

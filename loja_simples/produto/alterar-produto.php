@@ -1,12 +1,13 @@
 <?php
 
-    require_once '../conexao.php';
+    require_once '../config/conexao.php';
 
     session_start();
 
-    if(isset($_POST['nome']) && isset($_POST['descricao']) && isset($_POST['preco']) && isset($_POST['marca'])){
-
-        extract($_POST);
+    if(isset($_POST['nome']) && isset($_POST['descricao']) && isset($_POST['preco']) && isset($_POST['marca']) && isset($_GET['id'])){
+        
+    extract($_POST);
+    extract($_GET);
 
         try{
 
@@ -23,7 +24,7 @@
                 ]
             );
 
-            header('location: ../');
+            header('location: index.php');
 
         }
         catch(PDOException $e){
