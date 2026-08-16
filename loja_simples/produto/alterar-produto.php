@@ -6,8 +6,8 @@
 
     if(isset($_POST['nome']) && isset($_POST['descricao']) && isset($_POST['preco']) && isset($_POST['marca']) && isset($_GET['id'])){
         
-    extract($_POST);
-    extract($_GET);
+        extract($_POST);
+        extract($_GET);
 
         try{
 
@@ -31,6 +31,9 @@
             echo "Erro ao cadastrar produto - " . $e->getMessage();
         }
 
+    }
+    else{
+        header('location: index.php');
     }
 
 ?>

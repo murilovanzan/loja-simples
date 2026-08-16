@@ -4,22 +4,27 @@
 
     session_start();
 
-    extract($_GET);
+    if(isset($_GET['id'])){
+        
+        extract($_GET);
 
-    try{
+        try{
 
-        $sql = "DELETE FROM user WHERE id = :id;";
-        $stmt = $pdo->prepare($sql);
+            $sql = "DELETE FROM user WHERE id = :id;";
+            $stmt = $pdo->prepare($sql);
 
-        $stmt->execute([
-            ':id' => $id
-        ]);
+            $stmt->execute([
+                ':id' => $id
+            ]);
+
+        }
+        catch(PDOException $e){
+            echo "Erro na busca ao cadastrar usuário - " . $e->getMessage();
+        }
 
         header('location: ../logado.php');
     }
-    catch(PDOException $e){
-        echo "Erro na busca ao cadastrar usuário - " . $e->getMessage();
+    else{
+        header('location: index.php');
     }
-
-
 ?>

@@ -3,7 +3,9 @@
     require_once '../config/conexao.php';
 
     include_once '../assets/function.php';
+
     session_start();
+
     if(isset($_SESSION['erroMarca'])){
         $erro = $_SESSION['erroMarca'];
         unset($_SESSION['erroMarca']);
@@ -19,13 +21,8 @@
         $acao = "alterar-marca.php?id=".$id;
         $nomeBotao = 'Atualizar marca';
 
-        $sql = "SELECT * FROM marca WHERE id = :id";
-        $stmt = $pdo->prepare($sql);
+        $marca = findRow($pdo, "marca", $id);
 
-        $stmt->execute([":id" => $id]);
-
-        $marca = $stmt->fetch();
-        
     }
     else{
         
@@ -40,17 +37,7 @@
     }
     else{
 
-        try{
-
-            $sql = "SELECT * FROM marca;";
-            $stmt = $pdo->prepare($sql);
-
-            $stmt->execute();
-            $marcas = $stmt->fetchAll();
-        }
-        catch(PDOException $e){
-            echo "Erro na busca das marcas - " . $e->getMessage();
-        }
+        $marcas = getTable($pdo, "marca");
 
     }
 ?>

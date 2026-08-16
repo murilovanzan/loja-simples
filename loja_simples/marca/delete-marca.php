@@ -3,23 +3,30 @@
     require_once '../config/conexao.php';
 
     session_start();
+    
+    if(isset($_GET['id'])){
+        extract($_GET);
 
-    extract($_GET);
+        try{
 
-    try{
+            $sql = "DELETE FROM marca WHERE id = :id;";
+            $stmt = $pdo->prepare($sql);
 
-        $sql = "DELETE FROM marca WHERE id = :id;";
-        $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                ':id' => $id
+            ]);
 
-        $stmt->execute([
-            ':id' => $id
-        ]);
+            header('location: index.php');
+        }
+        catch(PDOException $e){
+            echo "Erro ao deletar marca - " . $e->getMessage();
+        }
 
+    }
+    else{
         header('location: index.php');
     }
-    catch(PDOException $e){
-        echo "Erro ao deletar marca - " . $e->getMessage();
-    }
+    
 
 
 ?>

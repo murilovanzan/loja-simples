@@ -5,11 +5,11 @@
     session_start();
 
     if(isset($_POST['username']) && isset($_POST['senha']) && isset($_GET['id'])){
-        
-    extract($_POST);
-    extract($_GET);
+            
+        extract($_POST);
+        extract($_GET);
 
-    $senha = password_hash($senha, PASSWORD_DEFAULT);
+        $senha = password_hash($senha, PASSWORD_DEFAULT);
 
         try{
 
@@ -31,6 +31,9 @@
             echo "Erro ao atualizar usuário - " . $e->getMessage();
         }
 
+    }
+    else{
+        header('location: index.php');
     }
 
 ?>

@@ -21,12 +21,7 @@
         $nomeBotao = 'Alterar usuário';
         $alteraUsername = false;
 
-        $sql = "SELECT * FROM user WHERE id = :id";
-        $stmt = $pdo->prepare($sql);
-
-        $stmt->execute([":id" => $id]);
-
-        $user = $stmt->fetch();
+        $user = findRow($pdo, 'user', $id);
 
     }
     else{
@@ -38,18 +33,7 @@
     
     if(isAdmin($pdo)){
         
-        try{
-
-            $sql = "SELECT * FROM user;";
-            $stmt = $pdo->prepare($sql);
-
-            $stmt->execute();
-            $users = $stmt->fetchAll();
-        }
-        catch(PDOException $e){
-            echo "Erro na busca dos usuários - " . $e->getMessage();
-        }
-
+        $users = getTable($pdo, 'user');
         $tableDisplay = 'table';
     }
     else{
@@ -119,7 +103,7 @@
                 endforeach;
             ?>
             </tbody>
-        </table>
+    </table>
     
 </body>
 </html>

@@ -5,35 +5,14 @@
     include_once '../assets/function.php';
 
     session_start();
-    try{
 
-        $sql = "SELECT * FROM marca;";
-        $stmt = $pdo->prepare($sql);
-
-        $stmt->execute();
-        $marcas = $stmt->fetchAll();
-
-    }
-    catch(PDOException $e){
-        echo 'Erro na busca das marcas para registrar produto - ' . $e->getMessage();
-    }
+    $marcas = getTable($pdo, "marca");
 
     if(!isAdmin($pdo)){
         header('location: ../logado.php');
     }
     else{
-        try{
-
-            $sql = "SELECT * FROM produto;";
-            $stmt = $pdo->prepare($sql);
-
-            $stmt->execute();
-            $produtos = $stmt->fetchAll();
-
-        }
-        catch(PDOException $e){
-            echo 'Erro na busca dos produtos - ' . $e->getMessage();
-        }
+        $produtos = getTable($pdo, "produto");
     }
     
     if(isset($_GET['id'])){
@@ -43,12 +22,7 @@
         $acao = "alterar-produto.php?id=".$id;
         $nomeBotao = 'Atualizar produto';
 
-        $sql = "SELECT * FROM produto WHERE id = :id";
-        $stmt = $pdo->prepare($sql);
-
-        $stmt->execute([":id" => $id]);
-
-        $prod = $stmt->fetch();
+        $prod = findRow($pdo, 'produto', $id);
         
     }
     else{

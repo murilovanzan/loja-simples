@@ -2,6 +2,8 @@
 
     require_once '../config/conexao.php';
 
+    include_once '../assets/function.php';
+
     session_start();
 
     if(isset($_POST['username']) && isset($_POST['senha'])){
@@ -10,18 +12,7 @@
 
         $senha = password_hash($senha, PASSWORD_DEFAULT);
 
-
-        try{
-
-            $sql = "SELECT * FROM user;";
-            $stmt = $pdo->prepare($sql);
-
-            $stmt->execute();
-            $users = $stmt->fetchAll();
-        }
-        catch(PDOException $e){
-            echo "Erro na busca ao cadastrar usuário - " . $e->getMessage();
-        }
+        $users = getTable($pdo, "user");
 
         foreach ($users as $user) {
 
@@ -45,13 +36,15 @@
                 ]
             );
 
-            header('location: ../');
-
         }
         catch(PDOException $e){
             echo "Erro ao cadastrar usuário - " . $e->getMessage();
         }
-
+        
+        header('location: ../');
     }
-
+    else{
+        header('location: index.php');
+    }
+    
 ?>

@@ -6,13 +6,6 @@
 
     include_once 'assets/function.php';
 
-    if(isAdmin($pdo)){
-        $tableDisplay = "block";
-    }
-    else{
-        $tableDisplay = "none";
-    }
-
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -33,6 +26,10 @@
         <br>
         <a href="usuario/">
             Cadastrar usuário
+        </a>
+        <br>
+        <a href="endereco/">
+            Cadastrar endereço
         </a>
     </div>
     
