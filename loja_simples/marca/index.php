@@ -5,6 +5,15 @@
     include_once '../assets/function.php';
 
     session_start();
+    
+    if(!isAdmin($pdo)){
+        header("location: ../logado.php");
+    }
+    else{
+
+        $marcas = getTable($pdo, "marca");
+
+    }
 
     if(isset($_SESSION['erroMarca'])){
         $erro = $_SESSION['erroMarca'];
@@ -31,15 +40,6 @@
         $marca = ['nome' => '', 'CNPJ' => '', 'imagem' => ''];
     }
 
-    
-    if(!isAdmin($pdo)){
-        header("location: ../logado.php");
-    }
-    else{
-
-        $marcas = getTable($pdo, "marca");
-
-    }
 ?>
 
 <!DOCTYPE html>
@@ -47,7 +47,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Cadastrar marcas</title>
+    <style>
+        td > img{
+            max-width: 15%; /* Scales down if the container is smaller than the image */
+            height: auto;     /* Maintains the original aspect ratio */
+        }
+    </style>
 </head>
 <body>
     <form action="<?= $acao ?>" method="post" enctype="multipart/form-data">
@@ -92,5 +98,9 @@
             ?>
             </tbody>
         </table>
+        
+    <a href='../logado.php'>
+        Logado
+    </a>
 </body>
 </html>

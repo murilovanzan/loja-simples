@@ -5,15 +5,15 @@
     include_once '../assets/function.php';
 
     session_start();
-
-    $marcas = getTable($pdo, "marca");
-
+    
     if(!isAdmin($pdo)){
         header('location: ../logado.php');
     }
     else{
         $produtos = getTable($pdo, "produto");
     }
+    
+    $marcas = getTable($pdo, "marca");
     
     if(isset($_GET['id'])){
 
@@ -94,7 +94,7 @@
                 <td><?= $produto['nome'] ?></td>
                 <td><?= $produto['descricao'] ?></td>
                 <td><?= $produto['quantidade'] ?></td>
-                <td><?= $produto['preco_unitario'] ?></td>
+                <td>R$<?= $produto['preco_unitario'] ?></td>
                 <?php
                     foreach ($marcas as $marca){
                         if($produto['ID_marca'] == $marca['ID']){
@@ -111,6 +111,9 @@
         </tbody>
     </table>
 
+    <a href='../logado.php'>
+        Logado
+    </a>
 </body>
 </html>
 

@@ -44,7 +44,7 @@
 
     }
 
-    function findRow($pdo, $tableName, $id){
+    function findRow($pdo, $tableName, $id, $all = false){
 
         try{
 
@@ -57,7 +57,13 @@
                 ]
             );
 
-            $query = $stmt->fetch();
+            if($all){
+                $query = $stmt->fetchAll();
+            }
+            else{
+                $query = $stmt->fetch();
+            }
+            
             return $query;
 
         }

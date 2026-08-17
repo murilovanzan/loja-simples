@@ -3,8 +3,12 @@
     require_once '../config/conexao.php';
     
     include_once '../assets/function.php';
-
+    
     session_start();
+
+    if(!isAdmin($pdo)){
+        header('location: ../logado.php');
+    }
 
     if(isset($_POST['nome']) && isset($_POST['CNPJ']) && isset($_FILES['logo'])){
 

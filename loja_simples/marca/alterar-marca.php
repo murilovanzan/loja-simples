@@ -1,15 +1,21 @@
 <?php
 
     require_once '../config/conexao.php';
-
+    
+    include_once '../assets/function.php';
+    
     session_start();
 
+    if(!isAdmin($pdo)){
+        header('location: ../logado.php');
+    }
+    
     if(isset($_POST['nome']) && isset($_POST['CNPJ']) && isset($_FILES['logo']) && isset($_GET['id'])){
             
         extract($_POST);
         extract($_GET);
         
-        $marca = getTable($pdo, 'marca');
+        $marca = findRow($pdo, 'marca', $id);
         
         if(!is_dir("logos/")){
             mkdir("logos/", 0755, true);

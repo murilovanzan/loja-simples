@@ -5,6 +5,7 @@
     include_once '../assets/function.php';
 
     session_start();
+
     if(isset($_SESSION['erroUsername'])){
         $erro = $_SESSION['erroUsername'];
         unset($_SESSION['erroUsername']);
@@ -13,10 +14,10 @@
         $erro = "";
     }
 
-    if(isset($_GET['id'])){
-    
-        extract($_GET);
-
+    if(isset($_SESSION['ID_login']) && isset($_GET['id']) && ($_GET['id'] == $_SESSION['ID_login'] || isAdmin($pdo))){
+        
+        extract($_GET);    
+        
         $acao = "alterar-usuario.php?id=".$id;
         $nomeBotao = 'Alterar usuário';
         $alteraUsername = false;
@@ -36,11 +37,19 @@
         $users = getTable($pdo, 'user');
         $tableDisplay = 'table';
     }
-    else{
-        $tableDisplay = 'none';
-
-        $users = [];
+    else if(isset($_SESSION['ID_login'])){
+        $tableDisplay = 'table';
+        
+        $users = findRow($pdo, 'user', $_SESSION['ID_login'], true);
     }
+    else{
+
+        $tableDisplay = 'none';
+        
+        $users = [];
+    
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -74,7 +83,7 @@
         <label for="username">Username:</label>
         <input type="text" name="username" id="username" value="<?= $user['username']?>" <?= !$alteraUsername ? 'readonly' : ''?>>
 
-        <label for="senha"><?= $nomeBotao ?>:</label>
+        <label for="senha">Senha:</label>
         <input type="password" name="senha" id="senha">
         <button type="button" onclick="mostrarSenha()">Mostrar senha</button>
 
@@ -105,5 +114,8 @@
             </tbody>
     </table>
     
+    <a href='../logado.php'>
+        Logado
+    </a>
 </body>
 </html>

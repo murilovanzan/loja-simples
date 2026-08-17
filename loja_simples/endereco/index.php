@@ -100,5 +100,8 @@
             </tbody>
         </table>
 
+    <a href='../logado.php'>
+        Logado
+    </a>
 </body>
 </html>

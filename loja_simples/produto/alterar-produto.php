@@ -1,8 +1,14 @@
 <?php
 
     require_once '../config/conexao.php';
-
+    
+    include_once '../assets/function.php';
+    
     session_start();
+
+    if(!isAdmin($pdo)){
+        header('location: ../logado.php');
+    }
 
     if(isset($_POST['nome']) && isset($_POST['descricao']) && isset($_POST['preco']) && isset($_POST['marca']) && isset($_GET['id'])){
         
