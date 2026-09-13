@@ -5,7 +5,7 @@
         if(isset($_SESSION['logado']) && $_SESSION['logado']){
             try{
 
-                $sql = "SELECT * FROM user;";
+                $sql = "SELECT * FROM usuario;";
                 $stmt = $pdo->prepare($sql);
 
                 $stmt->execute();
