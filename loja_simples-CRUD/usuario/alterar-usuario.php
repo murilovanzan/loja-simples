@@ -13,7 +13,7 @@
 
         try{
 
-            $sql = "UPDATE user SET username = :username, senha = :senha WHERE id = :id;";
+            $sql = "UPDATE usuario SET username = :username, senha = :senha WHERE id = :id;";
             $stmt = $pdo->prepare($sql);
 
             $stmt->execute(

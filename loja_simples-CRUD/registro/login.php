@@ -10,7 +10,7 @@
 
         extract($_POST);
 
-        $users = getTable($pdo, "user");
+        $users = getTable($pdo, "usuario");
 
         foreach ($users as $user) {
 
