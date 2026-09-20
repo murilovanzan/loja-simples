@@ -22,7 +22,7 @@
         $nomeBotao = 'Alterar usuário';
         $alteraUsername = false;
 
-        $user = findRow($pdo, 'user', $id);
+        $user = findRow($pdo, 'usuario', $id);
 
     }
     else{
@@ -34,13 +34,13 @@
     
     if(isAdmin($pdo)){
         
-        $users = getTable($pdo, 'user');
+        $users = getTable($pdo, 'usuario');
         $tableDisplay = 'table';
     }
     else if(isset($_SESSION['ID_login'])){
         $tableDisplay = 'table';
         
-        $users = findRow($pdo, 'user', $_SESSION['ID_login'], true);
+        $users = findRow($pdo, 'usuario', $_SESSION['ID_login'], true);
     }
     else{
 

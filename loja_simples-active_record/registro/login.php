@@ -1,6 +1,6 @@
 <?php
 
-    require_once '../config/conexao.php';
+    require_once '../usuario/Usuario.php';
     
     include_once '../assets/function.php';
 
@@ -9,8 +9,8 @@
     if(isset($_POST['username']) && isset($_POST['senha'])){
 
         extract($_POST);
-
-        $users = getTable($pdo, "user");
+        
+        $users = Usuario::getTodos();
 
         foreach ($users as $user) {
 

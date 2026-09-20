@@ -12,7 +12,7 @@
 
         $senha = password_hash($senha, PASSWORD_DEFAULT);
 
-        $users = getTable($pdo, "user");
+        $users = getTable($pdo, "usuario");
 
         foreach ($users as $user) {
 
@@ -26,7 +26,7 @@
 
         try{
 
-            $sql = "INSERT INTO user (username, senha) VALUES (:username, :senha);";
+            $sql = "INSERT INTO usuario (username, senha) VALUES (:username, :senha);";
             $stmt = $pdo->prepare($sql);
 
             $stmt->execute(

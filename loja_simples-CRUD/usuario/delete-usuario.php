@@ -12,7 +12,7 @@
 
         try{
 
-            $sql = "DELETE FROM user WHERE id = :id;";
+            $sql = "DELETE FROM usuario WHERE id = :id;";
             $stmt = $pdo->prepare($sql);
 
             $stmt->execute([
