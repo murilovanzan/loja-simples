@@ -1,12 +1,10 @@
 <?php
 
     require_once 'assets/verifica-login.php';
-
-    require_once 'config/conexao.php';
-
+    require_once 'usuario/Usuario.php';
     include_once 'assets/function.php';
 
-    if(isAdmin($pdo)){
+    if(isAdmin()){
         $tableDisplay = "block";
     }
     else{
@@ -44,4 +42,3 @@
     </a>
 </body>
 </html>
-    

@@ -1,17 +1,17 @@
 <?php
 
-    require_once '../config/conexao.php';
+    require_once 'Marca.php';
 
     include_once '../assets/function.php';
 
     session_start();
     
-    if(!isAdmin($pdo)){
+    if(!isAdmin()){
         header("location: ../logado.php");
     }
     else{
 
-        $marcas = getTable($pdo, "marca");
+        $marcas = Marca::getTodos();
 
     }
 
@@ -27,15 +27,15 @@
 
         extract($_GET);
         
-        $acao = "alterar-marca.php?id=".$id;
+        $acao = "update&id=".$id;
         $nomeBotao = 'Atualizar marca';
 
-        $marca = findRow($pdo, "marca", $id);
+        $marca = Marca::getById($id);
 
     }
     else{
         
-        $acao = 'registro-marca.php';
+        $acao = 'create';
         $nomeBotao = 'Cadastrar marca';
         $marca = ['nome' => '', 'CNPJ' => '', 'imagem' => ''];
     }
@@ -56,7 +56,7 @@
     </style>
 </head>
 <body>
-    <form action="<?= $acao ?>" method="post" enctype="multipart/form-data">
+    <form action="marcaActions.php?action=<?= $acao ?>" method="post" enctype="multipart/form-data">
 
         <span><?= $erro?></span>
 
@@ -90,7 +90,7 @@
                     <td><?= $marca['nome'] ?></td>
                     <td><?= $marca['CNPJ'] ?></td>
                     <td><img src="<?= $marca['imagem'] ?>" alt="Erro ao carregar imagem"></td>
-                    <td><a href="delete-marca.php?id=<?= $marca['ID'] ?>">[X]</a></td>
+                    <td><a href="marcaActions.php?action=delete&id=<?= $marca['ID'] ?>">[X]</a></td>
                     <td><a href="?id=<?= $marca['ID'] ?>">[X]</a></td>
                 </tr>
             <?php      

@@ -1,33 +1,34 @@
 <?php
 
-    require_once '../config/conexao.php';
+    require_once 'Produto.php';
+    require_once '../marca/Marca.php';
 
     include_once '../assets/function.php';
 
     session_start();
     
-    if(!isAdmin($pdo)){
+    if(!isAdmin()){
         header('location: ../logado.php');
     }
     else{
-        $produtos = getTable($pdo, "produto");
+        $produtos = Produto::getTodos();
     }
     
-    $marcas = getTable($pdo, "marca");
+    $marcas = Marca::getTodos();
     
     if(isset($_GET['id'])){
 
         extract($_GET);
         
-        $acao = "alterar-produto.php?id=".$id;
+        $acao = "update&id=".$id;
         $nomeBotao = 'Atualizar produto';
 
-        $prod = findRow($pdo, 'produto', $id);
+        $prod = Produto::getById($id);
         
     }
     else{
         
-        $acao = 'cadastro-produto.php';
+        $acao = 'create';
         $nomeBotao = 'Cadastrar produto';
         $prod = ['nome' => '', 'descricao' => '', 'preco_unitario' => ''];
     }
@@ -41,7 +42,7 @@
     <title>Cadastrar produtos</title>
 </head>
 <body>
-    <form action="<?= $acao ?>" method="post">
+    <form action="produtoActions.php?action=<?= $acao ?>" method="post">
         <label for="nome">Nome:</label>
         <input type="text" name="nome" id="nome" value=<?= $prod['nome']?>>
 
@@ -102,7 +103,7 @@
                         }
                     }   
                 ?>
-                <td><a href="delete-produto.php?id=<?= $produto['ID'] ?>">[X]</a></td>
+                <td><a href="produtoActions.php?action=delete&id=<?= $produto['ID'] ?>">[X]</a></td>
                 <td><a href="?id=<?= $produto['ID'] ?>">[X]</a></td>
             </tr>
     <?php      
@@ -116,4 +117,3 @@
     </a>
 </body>
 </html>
-

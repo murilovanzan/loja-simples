@@ -1,55 +1,22 @@
 <?php
 
-    require_once '../config/conexao.php';
+    require_once 'Endereco.php';
 
     require_once '../assets/verifica-login.php';
-
-    try{
-
-        $sql = 'SELECT * FROM endereco WHERE ID_user = :ID_user';
-        $stmt = $pdo->prepare($sql);
-
-        $stmt->execute(
-            [
-            ":ID_user" => $_SESSION['ID_login']
-            ]
-        );
-
-        $enderecos = $stmt->fetchAll();
-
-    }
-    catch(PDOException $e){
-        echo 'Erro ao procurar endereços - ' . $e->getMessage();
-    }
+    
+    $enderecos = Endereco::getByUserId($_SESSION['ID_login'], true);
 
     if(isset($_GET['id'])){
 
         extract($_GET); 
         
-        $acao = "alterar-endereco.php?id=".$id;
+        $acao = "update&id=".$id;
         $nomeBotao = "Alterar endereço";
 
-        try{
-
-            $sql = 'SELECT * FROM endereco WHERE ID_user = :ID_user AND id = :id';
-            $stmt = $pdo->prepare($sql);
-
-            $stmt->execute(
-                [
-                ":ID_user" => $_SESSION['ID_login'],
-                ":id" => $id
-                ]
-            );
-
-            $addrss = $stmt->fetch();
-
-        }
-        catch(PDOException $e){
-            echo 'Erro ao procurar endereços - ' . $e->getMessage();
-        }
+        $addrss = Endereco::getAddress($_SESSION['ID_login'], $id);
     }
     else{
-        $acao = "registrar-endereco.php";
+        $acao = "create";
         $nomeBotao = "Registrar endereço";
         $addrss = ["nome" => '', "CEP" => ''];
     }
@@ -63,7 +30,7 @@
     <title>Cadastrar enderecos</title>
 </head>
 <body>
-    <form action="<?= $acao ?>" method="post">
+    <form action="enderecoActions.php?action=<?= $acao ?>" method="post">
 
         <label for="nome">Nome:</label>
         <input type="text" name="nome" id="nome" value="<?= $addrss['nome']?>">
@@ -91,7 +58,7 @@
                     <td><?= $endereco['ID'] ?></td>
                     <td><?= $endereco['nome'] ?></td>
                     <td><?= $endereco['CEP'] ?></td>
-                    <td><a href="delete-endereco.php?id=<?= $endereco['ID'] ?>">[X]</a></td>
+                    <td><a href="enderecoActions.php?action=delete&id=<?= $endereco['ID'] ?>">[X]</a></td>
                     <td><a href="?id=<?= $endereco['ID'] ?>">[X]</a></td>
                 </tr>
             <?php      

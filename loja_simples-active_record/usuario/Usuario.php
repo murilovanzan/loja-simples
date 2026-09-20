@@ -1,90 +1,79 @@
 <?php
+    require_once __DIR__ . '/../config/conexao.php';
+
     class Usuario {
-        private $ID;
+
+        private $id;
         private $username;
         private $senha;
 
-        private $pdo;
-
-        public function __construct(PDO $pdo) {
-            $this->pdo = $pdo;
-        }
-
-        // ==========================================
-        // Getters
-        // ==========================================
-        public function getId() {
-            return $this->ID;
-        }
-        public function getUsername() {
-            return $this->username;
-        }
-        public function getSenha() {
-            return $this->senha;
-        }
-
-        // ==========================================
-        // Setters
-        // ==========================================
-        public function setId($ID) {
-            $this->ID = $ID;
-        }
-        public function setUsername($username) {
+        public function __construct($username, $senha){
             $this->username = $username;
-        }
-        public function setSenha($senha) {
+            $senha = password_hash($senha, PASSWORD_DEFAULT);
             $this->senha = $senha;
         }
 
-        // ==========================================
-        // Operações CRUD
-        // ==========================================
-        public function save() {
-            if ($this->ID) {
-                $sql = "UPDATE Usuario SET username = :u, senha = :s WHERE ID = :id";
-                $stmt = $this->pdo->prepare($sql);
-                return $stmt->execute([
-                    ':u'  => $this->username,
-                    ':s'  => $this->senha,
-                    ':id' => $this->ID
-                ]);
-            } else {
-                $sql = "INSERT INTO Usuario (username, senha) VALUES (:u, :s)";
-                $stmt = $this->pdo->prepare($sql);
-                $ok = $stmt->execute([
-                    ':u' => $this->username,
-                    ':s' => $this->senha
-                ]);
-                
-                if ($ok) {
-                    $this->ID = $this->pdo->lastInsertId();
-                }
-                return $ok;
-            }
+        public function getId(){
+            return $this->id;
+        }
+        public function getUsername(){
+            return $this->username;
+        }
+        public function getSenha(){
+            return $this->senha;
         }
 
-        public function load($id) {
-            $stmt = $this->pdo->prepare("SELECT * FROM Usuario WHERE ID = :id");
+        public function setId($id){
+            $this->id = $id;
+        }
+        public function setUsername($username){
+            $this->username = $username;
+        }
+        public function setSenha($senha){
+            $this->senha = $senha;
+        }
+
+        public function salvar(){
+            $db = getConnection();
+            $sql = "INSERT INTO usuario (username, senha) VALUES (:u, :s);";
+            $stmt = $db->prepare($sql);
+            return $stmt->execute([':u' => $this->username, ':s' => $this->senha]);
+        }
+
+        public function atualizar($id){
+            $this->setId($id);
+            $db = getConnection();
+            $sql = "UPDATE usuario SET username = :u, senha = :s WHERE id = :id;";
+            $stmt = $db->prepare($sql);
+            return $stmt->execute([':u' => $this->username, ':s' => $this->senha, ':id' => $this->id]);
+        }
+
+        public static function delete($id){
+            $db = getConnection();
+            $sql = "DELETE FROM usuario WHERE id = :id;";
+            $stmt = $db->prepare($sql);
+            return $stmt->execute([':id' => $id]);
+        }
+
+        public static function getTodos(){
+            $db = getConnection();
+            $sql = "SELECT * FROM usuario;";
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll();
+        }
+
+        public static function getById($id, $all = false){
+            $db = getConnection();
+            $sql = "SELECT * FROM usuario WHERE id = :id;";
+            $stmt = $db->prepare($sql);
             $stmt->execute([':id' => $id]);
-            
-            if ($dados = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $this->ID = $dados['ID'];
-                $this->username = $dados['username'];
-                $this->senha = $dados['senha'];
-                return true;
+            if($all){
+                return $stmt->fetchAll();
             }
-            return false;
-        }
-
-        public function delete() {
-            if (!$this->ID) return false;
-            $stmt = $this->pdo->prepare("DELETE FROM Usuario WHERE ID = :id");
-            return $stmt->execute([':id' => $this->ID]);
-        }
-
-        public static function all(PDO $pdo) {
-            $stmt = $pdo->query("SELECT * FROM Usuario");
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            else{
+                return $stmt->fetch();
+            }
         }
     }
 ?>

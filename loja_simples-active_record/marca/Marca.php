@@ -1,21 +1,21 @@
 <?php
+    require_once __DIR__ . '/../config/conexao.php';
+
     class Marca {
-        private $ID;
+        
+        private $id;
         private $nome;
         private $imagem;
         private $CNPJ;
 
-        private $pdo;
-
-        public function __construct(PDO $pdo) {
-            $this->pdo = $pdo;
+        public function __construct($nome, $imagem, $CNPJ){
+            $this->nome = $nome;
+            $this->imagem = $imagem;
+            $this->CNPJ = $CNPJ;
         }
 
-        // ==========================================
-        // Getters
-        // ==========================================
-        public function getId() {
-            return $this->ID;
+        public function getId(){
+            return $this->id;
         }
         public function getNome() {
             return $this->nome;
@@ -26,12 +26,9 @@
         public function getCnpj() {
             return $this->CNPJ;
         }
-
-        // ==========================================
-        // Setters
-        // ==========================================
-        public function setId($ID) {
-            $this->ID = $ID;
+        
+        public function setId($id){
+            $this->id = $id;
         }
         public function setNome($nome) {
             $this->nome = $nome;
@@ -43,58 +40,46 @@
             $this->CNPJ = $CNPJ;
         }
 
-        // ==========================================
-        // Operações CRUD
-        // ==========================================
-        public function save() {
-            if ($this->ID) {
-                $sql = "UPDATE Marca SET nome = :n, imagem = :i, CNPJ = :cnpj WHERE ID = :id";
-                $stmt = $this->pdo->prepare($sql);
-                return $stmt->execute([
-                    ':n'  => $this->nome,
-                    ':i'  => $this->imagem,
-                    ':cnpj'  => $this->CNPJ
-                    ':id' => $this->ID
-                ]);
-            } else {
-                $sql = "INSERT INTO Marca (nome, imagem, CNPJ) VALUES (:n, :i, :cnpj)";
-                $stmt = $this->pdo->prepare($sql);
-                $ok = $stmt->execute([
-                    ':n' => $this->nome,
-                    ':i' => $this->imagem,
-                    ':cnpj' => $this->CNPJ,
-                ]);
-                
-                if ($ok) {
-                    $this->ID = $this->pdo->lastInsertId();
-                }
-                return $ok;
-            }
+        public function salvar(){
+            $db = getConnection();
+            $sql = "INSERT INTO marca (nome, imagem, CNPJ) VALUES (:n, :i, :c);";
+            $stmt = $db->prepare($sql);
+            return $stmt->execute([':n' => $this->nome, ':i' => $this->imagem, ':c' => $this->CNPJ]);
         }
 
-        public function load($id) {
-            $stmt = $this->pdo->prepare("SELECT * FROM Marca WHERE ID = :id");
+        public function atualizar(){
+            $db = getConnection();
+            $sql = "UPDATE marca SET nome = :n, imagem = :i, CPNJ = :c WHERE id = :id;";
+            $stmt = $db->prepare($sql);
+            return $stmt->execute([':n' => $this->nome, ':i' => $this->imagem, ':c' => $this->CNPJ, ':id' => $this->id]);
+        }
+
+        public static function delete($id){
+            $db = getConnection();
+            $sql = "DELETE FROM marca WHERE id = :id;";
+            $stmt = $db->prepare($sql);
+            return $stmt->execute([':id' => $id]);
+        }
+
+        public static function getTodos(){
+            $db = getConnection();
+            $sql = "SELECT * FROM marca;";
+            $stmt = $db->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll();
+        }
+
+        public static function getById($id, $all = false){
+            $db = getConnection();
+            $sql = "SELECT * FROM marca WHERE id = :id;";
+            $stmt = $db->prepare($sql);
             $stmt->execute([':id' => $id]);
-            
-            if ($dados = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $this->ID = $dados['ID'];
-                $this->nome = $dados['nome'];
-                $this->imagem = $dados['imagem'];
-                $this->CNPJ = $dados['CPNJ'];
-                return true;
+            if($all){
+                return $stmt->fetchAll();
             }
-            return false;
-        }
-
-        public function delete() {
-            if (!$this->ID) return false;
-            $stmt = $this->pdo->prepare("DELETE FROM Marca WHERE ID = :id");
-            return $stmt->execute([':id' => $this->ID]);
-        }
-
-        public static function all(PDO $pdo) {
-            $stmt = $pdo->query("SELECT * FROM Marca");
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            else{
+                return $stmt->fetch();
+            }
         }
     }
 ?>

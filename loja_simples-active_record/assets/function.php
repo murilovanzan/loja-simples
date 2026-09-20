@@ -1,31 +1,24 @@
 <?php
 
-    function isAdmin($pdo){
-
+    function isAdmin(){
+        require_once __DIR__ . '/../usuario/Usuario.php';
         if(isset($_SESSION['logado']) && $_SESSION['logado']){
-            try{
-
-                $sql = "SELECT * FROM user;";
-                $stmt = $pdo->prepare($sql);
-
-                $stmt->execute();
-
-                $users = $stmt->fetchAll();
-                foreach ($users as $user){
-                    if($user['username'] == 'admin' && $_SESSION['ID_login'] == $user['ID']){
-                        return true;
-                    }
-                }
-
-            }
-            catch(PDOException $e){
-                echo "Erro ao verificar ADM - " . $e->getMessage();
-            }
-        }
         
+            $users = Usuario::getTodos();
+
+            foreach ($users as $user){
+                if($user['username'] == 'admin' && $_SESSION['ID_login'] == $user['ID']){
+                    return true;
+                }
+            }
+
+        }
         return false;
     }
 
+    //==================================
+    //Funções antigas - pré Active Records
+    //==================================
     function getTable($pdo, $tableName){
 
         try{

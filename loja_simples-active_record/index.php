@@ -1,6 +1,7 @@
 <?php
 
     session_start();
+    
     if(isset($_SESSION['erroLogin'])){
         $erro = $_SESSION['erroLogin'];
         unset($_SESSION['erroLogin']);

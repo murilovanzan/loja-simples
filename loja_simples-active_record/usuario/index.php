@@ -1,6 +1,6 @@
 <?php
 
-    require_once '../config/conexao.php';
+    require_once 'Usuario.php';
 
     include_once '../assets/function.php';
 
@@ -14,33 +14,33 @@
         $erro = "";
     }
 
-    if(isset($_SESSION['ID_login']) && isset($_GET['id']) && ($_GET['id'] == $_SESSION['ID_login'] || isAdmin($pdo))){
+    if(isset($_SESSION['ID_login']) && isset($_GET['id']) && ($_GET['id'] == $_SESSION['ID_login'] || isAdmin())){
         
         extract($_GET);    
         
-        $acao = "alterar-usuario.php?id=".$id;
+        $acao = "update&id=".$id;
         $nomeBotao = 'Alterar usuário';
         $alteraUsername = false;
 
-        $user = findRow($pdo, 'user', $id);
+        $user = Usuario::getById($id);
 
     }
     else{
-        $acao = 'cadastro-usuario.php';
+        $acao = 'create';
         $nomeBotao = 'Cadastrar usuário';
         $alteraUsername = true;
         $user = ['username' => ''];
     }
     
-    if(isAdmin($pdo)){
+    if(isAdmin()){
         
-        $users = getTable($pdo, 'user');
+        $users = Usuario::getTodos();
         $tableDisplay = 'table';
     }
     else if(isset($_SESSION['ID_login'])){
-        $tableDisplay = 'table';
         
-        $users = findRow($pdo, 'user', $_SESSION['ID_login'], true);
+        $tableDisplay = 'table';
+        $users = Usuario::getById($_SESSION['ID_login'], true);
     }
     else{
 
@@ -76,7 +76,7 @@
     </script>
 </head>
 <body>
-    <form action="<?= $acao ?>" method="post">
+    <form action="usuarioActions.php?action=<?= $acao ?>" method="post">
 
         <span><?= $erro?></span>
         
@@ -105,7 +105,7 @@
                 <tr>
                     <td><?= $user['ID'] ?></td>
                     <td><?= $user['username'] ?></td>
-                    <td><a href="delete-usuario.php?id=<?= $user['ID'] ?>">[X]</a></td>
+                    <td><a href="usuarioActions.php?action=delete&id=<?= $user['ID'] ?>">[X]</a></td>
                     <td><a href="?id=<?= $user['ID'] ?>">[X]</a></td>
                 </tr>
             <?php      
